@@ -70,13 +70,13 @@ git clone https://github.com/manasvishetty327/Local_Food_Wastage_Management.git
 cd Local_Food_Wastage_Management
 ```
 
-### 2. Create a virtual environment
+### 2. Create and activate a virtual environment
 
 **Windows**
 
 ```bash
 python -m venv venv
-venv\\Scripts\\activate
+venv\Scripts\activate
 ```
 
 **macOS / Linux**
@@ -92,22 +92,50 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Configure MySQL
+### 4. Prepare the database
 
 1. Start your local MySQL server.
-2. Open the SQL script `creating database and tables.sql` in MySQL Workbench or another MySQL client and execute it.
+2. Open `creating database and tables.sql` in MySQL Workbench or another MySQL client and execute it.
 3. Load the supplied CSV data into the corresponding tables using your preferred import method.
-4. Configure the database connection in `app.py` for your local MySQL username, password, host, and database.
+4. Configure the connection using environment variables or Streamlit secrets.
 
-**Security note:** The current application source contains local database connection credentials. Replace them with your own local configuration before running the project, and do not commit real passwords or secrets to GitHub.
+**Windows PowerShell**
 
-### 5. Start the Streamlit app
+```powershell
+$env:MYSQL_HOST="localhost"
+$env:MYSQL_USER="your_mysql_user"
+$env:MYSQL_PASSWORD="your_mysql_password"
+$env:MYSQL_DATABASE="food_wastage_db2"
+```
+
+**macOS / Linux**
+
+```bash
+export MYSQL_HOST="localhost"
+export MYSQL_USER="your_mysql_user"
+export MYSQL_PASSWORD="your_mysql_password"
+export MYSQL_DATABASE="food_wastage_db2"
+```
+
+Alternatively, create `.streamlit/secrets.toml` locally:
+
+```toml
+[mysql]
+host = "localhost"
+user = "your_mysql_user"
+password = "your_mysql_password"
+database = "food_wastage_db2"
+```
+
+Environment variables take precedence over Streamlit secrets. Keep `.streamlit/secrets.toml` out of version control and never commit real credentials.
+
+### 5. Start the application
 
 ```bash
 streamlit run app.py
 ```
 
-Streamlit will print the local URL in the terminal (usually http://localhost:8501).
+Streamlit prints the local URL in the terminal (usually http://localhost:8501).
 
 ## Notes
 
