@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -17,13 +18,23 @@ st.set_page_config(
 # ---------------------------------------------------
 # Database helpers
 # ---------------------------------------------------
+def get_db_setting(name, default=None):
+    env_value = os.getenv(f"MYSQL_{name.upper()}")
+    if env_value is not None:
+        return env_value
+    try:
+        return st.secrets.get("mysql", {}).get(name, default)
+    except Exception:
+        return default
+
 def get_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="root",
-        database="food_wastage_db2"
-    )
+    config = {
+        "host": get_db_setting("host", "localhost"),
+        "user": get_db_setting("user", "root"),
+        "password": get_db_setting("password", ""),
+        "database": get_db_setting("database", "food_wastage_db2"),
+    }
+    return mysql.connector.connect(**config)
 
 @st.cache_data(ttl=120)
 def run_query(query: str, params: tuple | None = None) -> pd.DataFrame:
